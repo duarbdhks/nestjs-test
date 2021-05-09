@@ -38,7 +38,7 @@ export class ExceptController {
     )
     id: number,
   ) {
-    return `입력받은 number: ${id}`;
+    return `입력받은  number: ${id}`;
   }
 
   @Get('auth/token')

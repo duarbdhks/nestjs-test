@@ -29,4 +29,20 @@ export class User {
 
   @OneToMany((type) => Photo, (photo) => photo.user)
   photos: Photo[];
+
+  constructor(
+    userId: string,
+    userName: string,
+    userPassword: string,
+    age: number,
+    isActive: boolean,
+    photos: Photo[],
+  ) {
+    this.userId = userId;
+    this.userName = userName;
+    this.userPassword = userPassword;
+    this.age = age;
+    this.isActive = isActive;
+    this.photos = photos;
+  }
 }

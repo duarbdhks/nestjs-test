@@ -11,6 +11,8 @@ import { TestModule } from './test/test.module';
 import { LoggerMiddleware } from './middleware/LoggerMiddleware';
 import { ExceptModule } from './exception/except.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './user/domain/User';
+import { Photo } from './user/domain/Photo';
 
 @Module({
   imports: [
@@ -21,7 +23,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       username: 'postgres',
       password: '1234',
       database: 'uaa',
-      entities: [],
+      entities: [User, Photo],
       synchronize: true,
     }),
     UserModule,

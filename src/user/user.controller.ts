@@ -37,7 +37,7 @@ export class UserController {
   }
 
   @Get(':userId')
-  findOne(@Param('userID') id: string): UserDto | { msg: string } {
+  findOne(@Param('userId') id: string) {
     return this.userService.findOne(id);
   }
 

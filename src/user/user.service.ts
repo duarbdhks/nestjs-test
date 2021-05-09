@@ -1,23 +1,45 @@
 import { Injectable, Scope } from '@nestjs/common';
 import { UserDto } from './user.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from './domain/User';
+import { Repository } from 'typeorm';
 
-@Injectable({ scope: Scope.REQUEST })
+@Injectable()
 export class UserService {
-  private users: UserDto[] = [
-    new UserDto('yeum', '염규완'),
-    new UserDto('kim', '김연아'),
-  ];
-
-  findAll(): Promise<UserDto[]> {
-    return new Promise((resolve) => setTimeout(() => resolve(this.users), 100));
+  constructor(
+    @InjectRepository(User) private userRepository: Repository<User>,
+  ) {
+    this.userRepository = userRepository;
   }
 
-  findOne(id: string): UserDto | { msg: string } {
-    const user = this.users.filter((u) => u.userId === id);
-    return user.length ? user[0] : { msg: 'nothing' };
+  /**
+   * User 리스트 조회
+   */
+  findAll(): Promise<User[]> {
+    return this.userRepository.find();
   }
 
-  saveUser(user: UserDto): void {
-    this.users = [...this.users, user];
+  /**
+   * 특정 유저 조회
+   * @param id
+   */
+  findOne(id: string): Promise<User> {
+    return this.userRepository.findOne({ userId: id });
+  }
+
+  /**
+   * 유저 저장
+   * @param user
+   */
+  async saveUser(user: User): Promise<void> {
+    await this.userRepository.save(user);
+  }
+
+  /**
+   * 특정 유저 삭제
+   * @param id
+   */
+  async deleteUser(id: string): Promise<void> {
+    await this.userRepository.delete({ userId: id });
   }
 }

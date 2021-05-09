@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Header,
   HttpCode,
@@ -12,11 +13,9 @@ import {
 import { UserDto } from './user.dto';
 import { UserService } from './user.service';
 import { TestService } from '../test/test.service';
+import { User } from './domain/User';
 
-@Controller({
-  path: 'user',
-  scope: Scope.REQUEST,
-})
+@Controller('user')
 export class UserController {
   constructor(
     private userService: UserService,
@@ -32,50 +31,42 @@ export class UserController {
   }
 
   @Get('list')
-  findAll(): Promise<UserDto[]> {
-    return this.userService.findAll();
-  }
-
-  @Get(':userId')
-  findOne(@Param('userId') id: string) {
-    return this.userService.findOne(id);
-  }
-
-  @Post()
-  saveUser(@Body() userDto: UserDto): string {
-    console.log(userDto);
-    this.userService.saveUser(userDto);
+  async findAll(): Promise<User[]> {
+    const userList = await this.userService.findAll();
     return Object.assign({
-      data: { ...userDto },
-      statusCode: 201,
-      statusMsg: '생성 성공',
+      data: userList,
+      statusCode: 200,
+      statusMsg: 'Success',
     });
   }
 
-  // @Get('list')
-  // findAll(): Promise<any[]> {
-  //   return new Promise((resolve) => {
-  //     setTimeout(
-  //       () => resolve([{ userName: '염규완' }, { userName: '김연아' }]),
-  //       100,
-  //     );
-  //   });
-  // }
-  //
-  // @Get(':userId')
-  // findOne(@Param('userId') id: string, @Res() res): string {
-  //   return res.status(200).send({ id, userName: '염규완' });
-  // }
-  //
-  // @Post()
-  // @HttpCode(201)
-  // @Header('Cache-Control', 'none')
-  // @Redirect('https://www.naver.com', 301)
-  // saveUser(@Body() userDto: UserDto): string {
-  //   return Object.assign({
-  //     statusCode: 201,
-  //     data: { ...userDto },
-  //     statusMsg: '생성 성공',
-  //   });
-  // }
+  @Get(':userId')
+  async findOne(@Param('userId') id: string): Promise<User> {
+    const user = await this.userService.findOne(id);
+    return Object.assign({
+      data: user,
+      statusCode: 200,
+      statusMsg: 'Success',
+    });
+  }
+
+  @Post()
+  async saveUser(@Body() user: User): Promise<void> {
+    await this.userService.saveUser(user);
+    return Object.assign({
+      data: { ...user },
+      statusCode: 201,
+      statusMsg: 'Success',
+    });
+  }
+
+  @Delete(':userId')
+  async deleteUser(@Param('userId') id: string) {
+    await this.userService.deleteUser(id);
+    return Object.assign({
+      data: { userId: id },
+      statusCode: 201,
+      statusMsg: 'Success',
+    });
+  }
 }

@@ -9,9 +9,10 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { TestModule } from './test/test.module';
 import { LoggerMiddleware } from './middleware/LoggerMiddleware';
+import { ExceptModule } from './exception/except.module';
 
 @Module({
-  imports: [UserModule, TestModule],
+  imports: [UserModule, TestModule, ExceptModule],
   controllers: [AppController],
   providers: [AppService],
 })

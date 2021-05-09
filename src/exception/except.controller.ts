@@ -4,9 +4,11 @@ import {
   HttpException,
   HttpStatus,
   Param,
+  ParseIntPipe,
   UseFilters,
 } from '@nestjs/common';
 import { HttpExceptionFilter } from './HttpExceptionFilter';
+import { AuthToken } from '../common/decorators/common.authToken';
 
 @Controller('except')
 export class ExceptController {
@@ -24,5 +26,23 @@ export class ExceptController {
         HttpStatus.FORBIDDEN,
       );
     }
+  }
+
+  @Get('pipe/:id')
+  exPipes(
+    @Param(
+      'id',
+      new ParseIntPipe({
+        errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE,
+      }),
+    )
+    id: number,
+  ) {
+    return `입력받은  number: ${id}`;
+  }
+
+  @Get('auth/token')
+  getAuthToken(@AuthToken() token: string) {
+    return `Header 에 입력한 토큰: ${token}`;
   }
 }

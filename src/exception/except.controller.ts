@@ -8,6 +8,7 @@ import {
   UseFilters,
 } from '@nestjs/common';
 import { HttpExceptionFilter } from './HttpExceptionFilter';
+import { AuthToken } from '../common/decorators/common.authToken';
 
 @Controller('except')
 export class ExceptController {
@@ -38,5 +39,10 @@ export class ExceptController {
     id: number,
   ) {
     return `입력받은 number: ${id}`;
+  }
+
+  @Get('auth/token')
+  getAuthToken(@AuthToken() token: string) {
+    return `Header 에 입력한 토큰: ${token}`;
   }
 }
